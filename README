@@ -1,0 +1,56 @@
+1. Introduction
+===============
+
+This test suit includes a multi-platform STD allocator test for
+C++ applications. The test is based on concurrent, multi-threaded
+memory allocations. 
+
+2. Installation and Use
+=======================
+
+To build all targets you must have the following compilers installed:
+1) gcc-2.95, in /usr/local/gcc-alt-2.95.2
+2) gcc-3.2.3, in /usr/local/gcc-alt-3.2.3
+3) gcc-3.4.3, in /usr/local/gcc-alt-3.4.3
+4) CERN AFS based ICC 8.X
+
+If you do have that, running `make' will build all targets and run
+all tests. The result will be dumped in files with postfix `.csv' 
+(a comma-separated table).
+
+You can analyze it in any spreadsheet program available. Otherwise,
+if you R (www.r-project.org) installed, you can do the following
+to produce nice bar plots of the results:
+
+bash$ cat *.csv | grep -v COMPILER > compilers.csv;
+bash$ ./filter compilers.csv;
+bash$ R
+R-prompt> source("makebar.R");
+R-prompt> q()
+
+You should have some sort of figures now at your working directory.
+You can tweak the output sink of the R script to output PDF or
+Postscript. Have fun.
+
+3. Tweaking
+===========
+
+Here are the comments: MT allocators, if not configured, will only act
+for space allocation up to 128 bytes. If more than 128 bytes is requested,
+the normal (new-based) allocator is used and, yes, that will incur into
+the locking effect. Also, std::vector's and other containers behave quite
+differently w.r.t their mem. allocation strategies: vectors will allocate
+space doubling everytime its current capacity. Lists will allocate elements
+in a one-by-one basis. So, lists profit better from MT allocators than
+vectors. So, for vectors, to see the effects of inefficient concurrent 
+allocation, you have to stay around the 128-bytes limit and iterate around 
+that point. For the lists, it suffices you iterate long enough. For strings,
+that will depend on the underlying C++ implementation, so check on a 
+per-compiler basis.
+
+If you plan to tweak the examples bare in mind they are designed to make
+evident the MT allocation benefic. Try to understand your tweak in terms of
+the outcome before thinking something is wrong.
+
+On any suggestions, please contact me: Andre.dos.Anjos@cern.ch
+

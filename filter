@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Andre dos Anjos
+if [ $# = 0 ]; then
+	echo "usage: $0 <compilers.csv>";
+	exit 0;
+fi
+
+awk 'BEGIN { FS="," } { if ( $2 == "std::vector" ) printf "%s (%s),%s,%s\n", $1, $4, $6, $8 }' $1 > vector.csv;
+awk 'BEGIN { FS="," } { if ( $2 == "std::list" ) printf "%s (%s),%s,%s\n", $1, $4, $6, $8 }' $1 > list.csv;
+awk 'BEGIN { FS="," } { if ( $2 == "string" ) printf "%s (%s),%s,%s\n", $1, $4, $6, $8 }' $1 > string.csv;
+
+exit 0;
+

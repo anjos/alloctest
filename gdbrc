@@ -1,0 +1,7 @@
+file ./gcc34-std-vector-int
+set args 1 10
+break 183
+run
+print nt
+print cycles
+
